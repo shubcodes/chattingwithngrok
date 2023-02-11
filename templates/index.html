@@ -1,0 +1,91 @@
+<html>
+  <head>
+    <title>Chat Application</title>
+
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+        }
+        h1 {
+          text-align: center;
+        }
+        form {
+          width: 500px;
+          margin: 0 auto;
+          text-align: left;
+        }
+        label, input[type="submit"] {
+          display: block;
+          margin-bottom: 10px;
+        }
+        input[type="text"] {
+          width: 100%;
+          padding: 5px;
+          font-size: 18px;
+          box-sizing: border-box;
+        }
+        input[type="submit"] {
+          width: 100%;
+          padding: 10px;
+          background-color: lightblue;
+          border: none;
+          font-size: 18px;
+          color: white;
+          cursor: pointer;
+        }
+        h2 {
+          text-align: center;
+          margin-top: 50px;
+        }
+        ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+        li {
+          margin-bottom: 10px;
+          padding-bottom: 10px;
+          border-bottom: 1px solid gray;
+        }
+      </style>
+
+  </head>
+  <body>
+    <h1>Chat Application</h1>
+    <form action="/" method="post" onsubmit="return sendMessage(event)">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name">
+      <br>
+      <label for="message">Message:</label>
+      <input type="text" id="message" name="message">
+      <br>
+      <input type="submit" value="Send">
+    </form>
+    <h2>Messages</h2>
+    <ul id="messages">
+      {% for message in messages %}
+        <li>{{ message.name }}: {{ message.message }}</li>
+      {% endfor %}
+    </ul>
+  </body>
+  <script>
+    function sendMessage(event) {
+      event.preventDefault();
+      var name = document.getElementById("name").value;
+      var message = document.getElementById("message").value;
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "/", true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+          var messagesList = document.getElementById("messages");
+          var newMessage = document.createElement("li");
+          newMessage.innerHTML = name + ": " + message;
+          messagesList.appendChild(newMessage);
+        }
+      };
+      xhr.send("name=" + name + "&message=" + message);
+      return false;
+    }
+  </script>
+</html>
