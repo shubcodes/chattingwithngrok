@@ -5,7 +5,11 @@
     <title>Chat App</title>
   </head>
   <body>
-    <div id="messages"></div>
+    <div id="messages">
+      {% for message in chat_messages %}
+      <p>{{ message }}</p>
+      {% endfor %}
+    </div>
     <form onsubmit="sendMessage(event)">
       <input type="text" id="messageText">
       <button type="submit">Send</button>
