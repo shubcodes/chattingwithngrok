@@ -8,7 +8,7 @@ templates = Jinja2Templates(directory="templates")
 # Store connected clients in a set
 connected_clients = set()
 
-# Store chat messages in a list
+# Store chat messages in a list of tuples
 chat_messages = []
 
 # Define WebSocket endpoint
@@ -20,11 +20,13 @@ async def websocket_endpoint(websocket: WebSocket):
         while True:
             # Receive message from client
             message = await websocket.receive_text()
-            # Store message in chat_messages list
-            chat_messages.append(message)
+            # Get user name from X-Forwarded-User header
+            user_name = websocket.headers.get("X-Forwarded-User")
+            # Store message and user name in chat_messages list
+            chat_messages.append((user_name, message))
             # Send message to all connected clients
             for client in connected_clients:
-                await client.send_text(message)
+                await client.send_text(f"{user_name}: {message}")
     except:
         connected_clients.remove(websocket)
 
