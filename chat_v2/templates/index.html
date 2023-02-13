@@ -1,116 +1,96 @@
-<!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <title>Chat App</title>
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>FastAPI Chat App</title>
     <style>
-      /* Custom Fonts */
-      @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
-    
-      body {
-        font-family: 'Roboto', sans-serif;
-        background-color: #f4f4f4;
+      * {
+        box-sizing: border-box;
       }
-    
+      body {
+        background-color: #f9f9f9;
+        font-family: Arial, sans-serif;
+      }
       .header {
-        height: 80px;
         background-color: #007aff;
         color: #fff;
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: center;
+        padding: 0.5rem;
+      }
+      .input-group {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        background-color: #f6f6f6;
+        border-top: 1px solid #d6d6d6;
+        position: sticky;
+        bottom: 0;
+      }
+      #messageText {
+        width: calc(100% - 3rem);
+        padding: 0.5rem;
+        margin-right: 1rem;
+        font-size: 1.25rem;
+        border: 1px solid #ddd;
+        border-radius: 0.25rem;
+        background-color: #fff;
+      }
+
+      #messages {
+        height: 70vh;
+        overflow: auto;
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+        border-radius: 0.25rem;
+        background-color: #fff;
+        border: 1px solid #ddd;
+      }
+      .message {
+        margin: 1rem 0;
+      }
+      .name {
+        font-weight: bold;
+      }
+      #emojiPicker {
+        position: absolute;
+        bottom: 65px;
+        right: 10px;
+        background-color: #f6f6f6;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+        display: none;
+      }
+      .emoji-button {
+        width: 70px;
+        height: 50px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 24px;
-      }
-    
-      #messages {
-        height: 450px;
-        overflow: auto;
-        background-color: #fff;
-        border-radius: 10px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        margin: 20px 0;
-        padding: 20px;
-      }
-    
-      .message {
-        display: flex;
-        margin-bottom: 20px;
-      }
-    
-      .message .avatar {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        margin-right: 20px;
-        background-size: cover;
-        background-position: center;
-        background-image: url('https://i.pravatar.cc/100');
-      }
-    
-      .message .content {
-        background-color: #f5f5f5;
-        padding: 20px;
-        border-radius: 10px;
-        color: #333;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        width: 100%;
-      }
-    
-      .message .content .meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-      }
-    
-      .message .content .meta .name {
-        font-size: 18px;
-        font-weight: 500;
-        color: #333;
-      }
-    
-      .message .content .meta .time {
-        font-size: 14px;
-        font-weight: 400;
-        color: #999;
-      }
-    
-      .message .content .text {
-        font-size: 16px;
-        font-weight: 400;
-        color: #333;
-      }
-    
-      #messageText {
-        width: 100%;
-        height: 50px;
-        padding: 15px;
-        font-size: 16px;
-        border-radius: 20px;
-        border: none;
-        background-color: #f5f5f5;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        margin-bottom: 20px;
-      }
-    
-      button[type=submit] {
-        width: 100%;
-        height: 50px;
-        font-size: 16px;
-        font-weight: 500;
-        border-radius: 20px;
-        border: none;
+        font-size: 1.5rem;
         background-color: #007aff;
-        color: #fff;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        transition: all 0.3s ease;
+        cursor: pointer;
+        border-radius:10px;
+        border-color:#007aff;
       }
-    
-      button[type=submit]:hover {
-        background-color: #0065cc;
+
+      .submit-button {
+        width: 151px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        background-color: #007aff;
+        margin-left: 15px;
+        color: #fff;
+        border-radius: 10px;
+        border-color:#007aff;
       }
     </style>
+    
 
   </head>
   
@@ -127,9 +107,13 @@
     <form onsubmit="sendMessage(event)">
       <div class="input-group">
         <input type="text" id="messageText" autocomplete="off" placeholder="Type a message...">
-        <emoji-picker for="messageText"></emoji-picker>
+        <div class="emoji-button" onclick="toggleEmojiPicker()">
+          <button class="emoji-button" id="emojiButton">&#x1F60A;</button>
+        </div>
+        <button class="submit-button" type="submit">Send</button>
+        <emoji-picker for="messageText" id="emojiPicker" style="display: none;"></emoji-picker>
       </div>
-      <button type="submit">Send</button>
+      
     </form>
     <script>
       const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
@@ -156,6 +140,10 @@
         const message = messageInput.value;
         messageInput.value = "";
         socket.send(message);
+      }
+      function toggleEmojiPicker() {
+        const picker = document.getElementById("emojiPicker");
+        picker.style.display = picker.style.display === "none" ? "block" : "none";
       }
       const picker = document.querySelector('emoji-picker');
       picker.addEventListener('emoji-click', event => {
