@@ -8,6 +8,9 @@ templates = Jinja2Templates(directory="templates")
 # Store connected clients in a set
 connected_clients = set()
 
+# Store chat messages in a list
+chat_messages = []
+
 # Define WebSocket endpoint
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
@@ -17,6 +20,8 @@ async def websocket_endpoint(websocket: WebSocket):
         while True:
             # Receive message from client
             message = await websocket.receive_text()
+            # Store message in chat_messages list
+            chat_messages.append(message)
             # Send message to all connected clients
             for client in connected_clients:
                 await client.send_text(message)
@@ -26,9 +31,9 @@ async def websocket_endpoint(websocket: WebSocket):
 # Define index page endpoint
 @app.get("/")
 async def get(request: Request):
-    with open("templates/index.html", "r") as f:
-        content = f.read()
-    return HTMLResponse(content=content)
+    # Render index.html template and pass chat messages to it
+    content = templates.TemplateResponse("index.html", {"request": request, "chat_messages": chat_messages})
+    return content
 
 if __name__ == "__main__":
     import uvicorn
