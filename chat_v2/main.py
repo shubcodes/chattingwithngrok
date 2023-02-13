@@ -21,7 +21,7 @@ async def websocket_endpoint(websocket: WebSocket):
             # Receive message from client
             message = await websocket.receive_text()
             # Get user name from X-Forwarded-User header
-            user_name = websocket.headers.get("X-Forwarded-User")
+            user_name = websocket.headers.get("ngrok-auth-user-name")
             # Store message and user name in chat_messages list
             chat_messages.append((user_name, message))
             # Send message to all connected clients

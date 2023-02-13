@@ -7,7 +7,7 @@
   <body>
     <div id="messages">
       {% for message in chat_messages %}
-      <p>{{ message }}</p>
+      <p>{{ message[0] }}: {{ message[1] }}</p>
       {% endfor %}
     </div>
     <form onsubmit="sendMessage(event)">
