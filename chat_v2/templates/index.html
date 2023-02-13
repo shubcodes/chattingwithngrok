@@ -11,8 +11,9 @@
       <button type="submit">Send</button>
     </form>
     <script>
-      const ngrokUrl = window.location.origin;
-      const socket = new WebSocket("ws://" + ngrokUrl.replace(/^http/, "ws") + "/ws");
+      const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+      const wsUrl = wsProtocol + "//" + window.location.host + "/ws";
+      const socket = new WebSocket(wsUrl);
       socket.onmessage = event => {
         const messagesDiv = document.getElementById("messages");
         const message = document.createElement("p");
