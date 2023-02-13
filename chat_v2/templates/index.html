@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>Chat App</title>
-    
+
     <style>
       /* Custom Fonts */
       @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
@@ -111,11 +111,11 @@
         background-color: #0065cc;
       }
     </style>
-    
 
   </head>
+  
   <body>
-    <div class="header">Chat with ngrok</div>
+    <div class="header">FastAPI Chat App</div>
     <div id="messages">
       {% for message in chat_messages %}
       <div class="message">
@@ -125,7 +125,10 @@
       {% endfor %}
     </div>
     <form onsubmit="sendMessage(event)">
-      <input type="text" id="messageText" autocomplete="off" placeholder="Type a message...">
+      <div class="input-group">
+        <input type="text" id="messageText" autocomplete="off" placeholder="Type a message...">
+        <emoji-picker for="messageText"></emoji-picker>
+      </div>
       <button type="submit">Send</button>
     </form>
     <script>
@@ -154,8 +157,13 @@
         messageInput.value = "";
         socket.send(message);
       }
+      const picker = document.querySelector('emoji-picker');
+      picker.addEventListener('emoji-click', event => {
+        const messageInput = document.getElementById("messageText");
+        messageInput.value += event.detail.unicode;
+        messageInput.focus();
+      });
     </script>
+    <script type="module" src="https://cdn.skypack.dev/emoji-picker-element?min"></script>
   </body>
-  
-  
 </html>
