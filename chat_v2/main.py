@@ -26,8 +26,9 @@ async def websocket_endpoint(websocket: WebSocket):
 # Define index page endpoint
 @app.get("/")
 async def get(request: Request):
-    websocket_url = "ws://" + request.client.host + "/ws"
-    return templates.TemplateResponse("index.html", {"request": request, "websocket_url": websocket_url})
+    with open("templates/index.html", "r") as f:
+        content = f.read()
+    return HTMLResponse(content=content)
 
 if __name__ == "__main__":
     import uvicorn
