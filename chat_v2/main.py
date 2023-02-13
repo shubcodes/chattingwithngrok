@@ -1,7 +1,9 @@
-from fastapi import FastAPI, WebSocket
+from fastapi import FastAPI, Request, WebSocket
 from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 
 # Store connected clients in a set
 connected_clients = set()
@@ -23,10 +25,9 @@ async def websocket_endpoint(websocket: WebSocket):
 
 # Define index page endpoint
 @app.get("/")
-async def get():
-    with open("index.html", "r") as f:
-        content = f.read()
-    return HTMLResponse(content=content)
+async def get(request: Request):
+    websocket_url = "ws://" + request.client.host + "/ws"
+    return templates.TemplateResponse("index.html", {"request": request, "websocket_url": websocket_url})
 
 if __name__ == "__main__":
     import uvicorn
