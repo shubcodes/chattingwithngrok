@@ -3,7 +3,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>FastAPI Chat App</title>
+    <title>Chat with ngrok</title>
     <style>
       * {
         box-sizing: border-box;
@@ -43,6 +43,7 @@
         height: 70vh;
         overflow: auto;
         padding: 0.5rem;
+        margin-top:1rem;
         margin-bottom: 1rem;
         border-radius: 0.25rem;
         background-color: #fff;
@@ -95,7 +96,7 @@
   </head>
   
   <body>
-    <div class="header">FastAPI Chat App</div>
+    <div class="header">chat with ngrok</div>
     <div id="messages">
       {% for message in chat_messages %}
       <div class="message">
@@ -108,10 +109,10 @@
       <div class="input-group">
         <input type="text" id="messageText" autocomplete="off" placeholder="Type a message...">
         <div class="emoji-button" onclick="toggleEmojiPicker()">
-          <button class="emoji-button" id="emojiButton">&#x1F60A;</button>
+          <button type="button" class="emoji-button" id="emojiButton">&#x1F60A;</button>
         </div>
-        <button class="submit-button" type="submit">Send</button>
         <emoji-picker for="messageText" id="emojiPicker" style="display: none;"></emoji-picker>
+        <button class="submit-button" type="submit">Send</button>
       </div>
       
     </form>
@@ -150,7 +151,8 @@
         const messageInput = document.getElementById("messageText");
         messageInput.value += event.detail.unicode;
         messageInput.focus();
-      });
+      }
+      );
     </script>
     <script type="module" src="https://cdn.skypack.dev/emoji-picker-element?min"></script>
   </body>
