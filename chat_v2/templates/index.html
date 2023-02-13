@@ -3,11 +3,47 @@
   <head>
     <meta charset="UTF-8">
     <title>Chat App</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background-color: #f5f5f5;
+      }
+      #messages {
+        height: 400px;
+        overflow: auto;
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: #fff;
+      }
+      #messages p {
+        margin: 0;
+        padding: 5px;
+      }
+      .message {
+        margin-bottom: 10px;
+      }
+      .message .name {
+        font-weight: bold;
+      }
+      .message .text {
+        margin-left: 10px;
+      }
+      #messageText {
+        width: 80%;
+      }
+      button[type=submit] {
+        width: 20%;
+      }
+    </style>
   </head>
   <body>
     <div id="messages">
       {% for message in chat_messages %}
-      <p>{{ message[0] }}: {{ message[1] }}</p>
+      <div class="message">
+        <span class="name">{{ message[0] }}:</span>
+        <span class="text">{{ message[1] }}</span>
+      </div>
       {% endfor %}
     </div>
     <form onsubmit="sendMessage(event)">
@@ -20,8 +56,16 @@
       const socket = new WebSocket(wsUrl);
       socket.onmessage = event => {
         const messagesDiv = document.getElementById("messages");
-        const message = document.createElement("p");
-        message.innerText = event.data;
+        const message = document.createElement("div");
+        message.classList.add("message");
+        const nameSpan = document.createElement("span");
+        nameSpan.classList.add("name");
+        nameSpan.innerText = event.data.split(":")[0];
+        const textSpan = document.createElement("span");
+        textSpan.classList.add("text");
+        textSpan.innerText = event.data.split(":")[1];
+        message.appendChild(nameSpan);
+        message.appendChild(textSpan);
         messagesDiv.appendChild(message);
       };
       function sendMessage(event) {
