@@ -5,7 +5,8 @@
 This repo contains two different application folders. One 'chat_v1' which is the first original test and you can use it by following along step by step on the blog:
 https://shub.codes/ngrokchatv1/
 
-The second folder 'chat_v2' is the new iteration of the app and will be updated with a new blog shortly.
+The second folder 'chat_v2' is the new iteration of the app and you can use it by following along step by step on the second blog:
+https://shub.codes/ngrokchat2/
 
 Clone this repo: 
 ```
